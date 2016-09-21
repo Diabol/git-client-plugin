@@ -828,10 +828,17 @@ public abstract class GitAPITestCase extends TestCase {
         w.touch(fileName2);
         w.touch(fileName, "new content");
 
+        final String dirWithGitRepoName = "dir-with-git-repo";
+        final File dirWithGitRepo = w.file(dirWithGitRepoName);
+        assertTrue("Did not create dir " + dirWithGitRepoName, dirWithGitRepo.mkdir());
+        final WorkingArea subRepo = new WorkingArea(dirWithGitRepo).init();
+        subRepo.commitEmpty("commitSubRepo");
+
         w.git.clean();
         assertFalse(w.exists(dirName1));
         assertFalse(w.exists(fileName1));
         assertFalse(w.exists(fileName2));
+        assertFalse(w.exists(dirWithGitRepoName));
         assertEquals("content " + fileName, w.contentOf(fileName));
         assertEquals("content " + fileNameFace, w.contentOf(fileNameFace));
         assertEquals("content " + fileNameSwim, w.contentOf(fileNameSwim));
